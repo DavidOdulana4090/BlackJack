@@ -1,0 +1,106 @@
+
+.player-hand {
+  background: linear-gradient(180deg, var(--glass-bg) 0%, rgba(0, 0, 0, 0.2) 100%);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 25px 30px;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.player-hand::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.5), transparent);
+}
+
+.player-hand.active {
+  border-color: var(--gold);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(255, 215, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.player-hand.finished {
+  opacity: 0.7;
+}
+
+.player-hand:hover.active {
+  transform: translateY(-5px);
+}
+
+.hand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.hand-label {
+  font-size: 1.1rem;
+  color: #aab;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-weight: 500;
+}
+
+.hand-bet {
+  font-size: 1rem;
+  color: var(--gold);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.player-hand .cards {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 160px;
+  align-items: center;
+  perspective: 1000px;
+}
+
+.player-hand .hand-value {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+@media (max-width: 600px) {
+  .player-hand {
+    padding: 20px 15px;
+  }
+  
+  .player-hand .cards {
+    min-height: 120px;
+  }
+  
+  .player-hand .card {
+    width: 75px;
+    height: 105px;
+    padding: 6px;
+  }
+  
+  .player-hand .card-corner {
+    font-size: 0.75rem;
+  }
+  
+  .player-hand .card-center {
+    font-size: 1.8rem;
+  }
+}
