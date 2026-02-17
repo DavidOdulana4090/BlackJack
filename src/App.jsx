@@ -381,7 +381,7 @@ function App() {
       </main>
 
       <footer>
-        <p>Blackjack pays 3:2 • Dealer stands on 17</p>
+        <p>Blackjack pays 3:2 • Dealer stands on 17 • For you addicts ( me )</p>
       </footer>
     </div>
   );
