@@ -19,7 +19,8 @@ function App() {
   const [gameState, setGameState] = useState('betting');
   const [message, setMessage] = useState('');
   const [wallet, setWallet] = useState(1000);
-  const [bet, setBet] = useState(100);
+  const [defaultBet, setDefaultBet] = useState(100);
+  const [playerBets, setPlayerBets] = useState({});
   const [currentHandIndex, setCurrentHandIndex] = useState(0);
   const [numPlayers, setNumPlayers] = useState(1);
 
@@ -100,9 +101,12 @@ function App() {
     const newDeck = createDeck();
     
     const hands = [];
+    let totalBet = 0;
     for (let i = 0; i < numPlayers; i++) {
+      const betAmount = playerBets[i] || defaultBet;
       const pHand = [newDeck.pop(), newDeck.pop()];
-      hands.push(createHand(pHand, bet));
+      hands.push(createHand(pHand, betAmount));
+      totalBet += betAmount;
     }
     
     const dHand = [newDeck.pop(), newDeck.pop()];
@@ -114,10 +118,17 @@ function App() {
     setCurrentHandIndex(0);
     setMessage('');
 
-    setWallet(prev => prev - (bet * numPlayers));
+    setWallet(prev => prev - totalBet);
 
     checkBlackjack(0, hands, dHand);
-  }, [bet, numPlayers, checkBlackjack]);
+  }, [numPlayers, playerBets, defaultBet, checkBlackjack]);
+
+  const handleBetChange = (playerIndex, value) => {
+    setPlayerBets(prev => ({
+      ...prev,
+      [playerIndex]: Math.max(1, Math.min(wallet, parseInt(value) || 1))
+    }));
+  };
 
   const hit = useCallback(() => {
     if (gameState !== 'playing') return;
@@ -308,16 +319,34 @@ function App() {
                   ))}
                 </div>
               </div>
-              <div className="setup-row">
-                <label>Bet: $</label>
-                <input 
-                  type="number" 
-                  value={bet} 
-                  onChange={(e) => setBet(Math.max(1, Math.min(wallet, parseInt(e.target.value) || 1)))}
-                  min="1"
-                  max={wallet}
-                />
+              
+              <div className="bet-setup">
+                <div className="default-bet-row">
+                  <label>Default Bet: $</label>
+                  <input 
+                    type="number" 
+                    value={defaultBet} 
+                    onChange={(e) => setDefaultBet(Math.max(1, Math.min(wallet, parseInt(e.target.value) || 1)))}
+                    min="1"
+                    max={wallet}
+                  />
+                </div>
+                
+                {Array.from({ length: numPlayers }, (_, i) => (
+                  <div key={i} className="player-bet-row">
+                    <span className="player-label">Player {i + 1}</span>
+                    <input 
+                      type="number" 
+                      value={playerBets[i] || ''} 
+                      placeholder={`$${defaultBet}`}
+                      onChange={(e) => handleBetChange(i, e.target.value)}
+                      min="1"
+                      max={wallet}
+                    />
+                  </div>
+                ))}
               </div>
+              
               <button className="btn btn-primary" onClick={startGame}>
                 Deal Cards
               </button>
@@ -352,7 +381,7 @@ function App() {
       </main>
 
       <footer>
-        <p>for you gambling addicts</p>
+        <p>Blackjack pays 3:2 • Dealer stands on 17</p>
       </footer>
     </div>
   );
